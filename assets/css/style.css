@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+background-color: black;
+}
+
+header {
+  color: white;
+  font-size: 32px;
+  text-align: center;
+  height:70px;
+  margin-bottom: 0px;
+}
+
+.container {
+  width:100%;
+  max-width: 960px;
+  background-color: green;
+  margin:0px auto;
+  height: 100%
+}
+#main-container {
+  background-color: blue;
+  height:auto;
+  width:100%;
+  margin-top: 10px;
+}
+
+#enemies-container {
+  background-color: orange;
+  height:200px;
+  width:100%;
+  margin-top: 10px;
+}
+#arena  {
+  background-color: red;
+  height:200px;
+  width:100%;
+  margin-top: 10px;
+}
+
+.characters {
+  width: 150px;
+  height: 150px;
+  border: black dashed 2px;
+  display: inline-block;
+  margin: 20px;
+}
+
+.label {
+  margin:20px;
+  padding-bottom: 20px;
+  background-color: yellow;
+}
+
+.label-container {
+  width:100%;
+}
