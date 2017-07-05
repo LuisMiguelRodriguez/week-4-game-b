@@ -16,6 +16,7 @@ $("#main-container .characters").on("click", function() {
   for (var i = 0; i < game.characters.length; i++){
     if (game.characters[i].name == $(this).attr("data-char")){
       game.pickMainCharacter(game.characters[i]);
+      game.characters.splice(i,0);
     } else {
       game.enemies.push(game.characters[i]);
     }
@@ -28,11 +29,40 @@ $("#main-container .characters").on("click", function() {
     charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
     $("#enemies-container").append(charHolder);
   }
-
+  //updates only main character to be reloaded
   $("#main-container").html("<div class='characters'><img src='assets/images/" + game.mainCharacter.name + ".jpg' width=150px height=150px /></div>");
 
+  $(function(){
+    $('#enemies-container .characters').on("click", function() {
+      alert($(this).attr("data-char"));
+      $("#enemies-container").html("");
+
+      for (var i = 0; i < game.enemies.length; i++){
+        if (game.enemies[i].name == $(this).attr("data-char")){
+          game.pickEnemy(game.enemies[i]);
+
+          $("#arena").html("<div class='characters'><img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px /></div>");
+        } else {
+
+          var charHolder = $("<div>");
+          charHolder.addClass("characters");
+          charHolder.attr("data-char", game.enemies[i].name);
+          charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
+          $("#enemies-container").append(charHolder);
+
+        }
+      }
+
+
+
+
+
+    });
+  })
 
 });
+
+
 
 
   function Character (name, attack , counterAttack){
@@ -58,6 +88,9 @@ $("#main-container .characters").on("click", function() {
    };
    this.characters = [char1, char2, char3, char4];
    this.enemies = [];
+   this.pickEnemy = function (character){
+     this.enemy = character;
+   };
 
  }
 
