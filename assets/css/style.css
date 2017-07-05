@@ -47,6 +47,7 @@ header {
   border: black dashed 2px;
   display: inline-block;
   margin: 20px;
+  overflow: hidden;
 }
 
 .label {
