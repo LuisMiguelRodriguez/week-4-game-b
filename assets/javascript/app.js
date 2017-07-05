@@ -10,20 +10,37 @@ console.log(game);
 game.load();
 
 
+$("#main-container .characters").on("click", function() {
+  alert($(this).attr("data-char"));
 
-function Character (name, attack , counterAttack){
-  this.name = name;
-  this.HealthPoints = 100;
-  this.AttackPower  = attack;
-  this.CounterAttackPower = counterAttack;
-}
+  for (var i = 0; i < game.characters.length; i++){
+    if (game.characters[i].name == $(this).attr("data-char")){
+      game.pickMainCharacter(game.characters[i]);
+    } else {
+      game.enemies.push(game.characters[i]);
+    }
+  }
 
- var kenobi = new Character( 6 , 10 );
- var luke = new Character(8 , 15);
- var sidious = new Character(10 , 20);
- var maul = new Character(15 , 25);
+  for (var i = 0; i < game.enemies.length; i++){
+    var charHolder = $("<div>");
+    charHolder.addClass("characters");
+    charHolder.attr("data-char", game.enemies[i].name);
+    charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
+    $("#enemies-container").append(charHolder);
+  }
+
+  $("#main-container").html("<div class='characters'><img src='assets/images/" + game.mainCharacter.name + ".jpg' width=150px height=150px /></div>");
 
 
+});
+
+
+  function Character (name, attack , counterAttack){
+    this.name = name;
+    this.HealthPoints = 100;
+    this.AttackPower  = attack;
+    this.CounterAttackPower = counterAttack;
+  }
 
  function Game (char1, char2, char3, char4) {
    this.load = function() {
