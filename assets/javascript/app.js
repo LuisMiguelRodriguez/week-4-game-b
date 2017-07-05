@@ -13,14 +13,22 @@ game.load();
 $("#main-container .characters").on("click", function() {
   alert($(this).attr("data-char"));
 
+  //declaring a variable before loop to hold index of character to
+  //remove and also placing the splice method outside of the loop
+  //to not change the size of the array while looping
+ var spliceHolder;
   for (var i = 0; i < game.characters.length; i++){
     if (game.characters[i].name == $(this).attr("data-char")){
       game.pickMainCharacter(game.characters[i]);
-      game.characters.splice(i,0);
+      //remove main character from the array
+      spliceHolder = i;
+      console.log(game.characters);
     } else {
       game.enemies.push(game.characters[i]);
     }
+
   }
+  game.characters.splice(spliceHolder,1);
 
   for (var i = 0; i < game.enemies.length; i++){
     var charHolder = $("<div>");
@@ -29,19 +37,25 @@ $("#main-container .characters").on("click", function() {
     charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
     $("#enemies-container").append(charHolder);
   }
+
   //updates only main character to be reloaded
-  $("#main-container").html("<div class='characters'><img src='assets/images/" + game.mainCharacter.name + ".jpg' width=150px height=150px /></div>");
+  $("#main-container").html("<div class='characters' data-char='"+ game.mainCharacter.name +"'><img src='assets/images/" + game.mainCharacter.name + ".jpg' width=150px height=150px /></div>");
 
   $(function(){
     $('#enemies-container .characters').on("click", function() {
       alert($(this).attr("data-char"));
       $("#enemies-container").html("");
 
+      var spliceHolder;
+
       for (var i = 0; i < game.enemies.length; i++){
         if (game.enemies[i].name == $(this).attr("data-char")){
           game.pickEnemy(game.enemies[i]);
 
-          $("#arena").html("<div class='characters'><img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px /></div>");
+          $("#arena").html("<div class='characters' data-char='"+ game.enemies[i].name +"'><img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px /></div>");
+
+          spliceHolder = i;
+
         } else {
 
           var charHolder = $("<div>");
@@ -53,10 +67,8 @@ $("#main-container .characters").on("click", function() {
         }
       }
 
-
-
-
-
+      //remove from the enemies array
+      game.enemies.splice(spliceHolder, 1);
     });
   })
 
@@ -94,6 +106,55 @@ $("#main-container .characters").on("click", function() {
 
  }
 
+$("#attack").on("click", function () {
+  var attack = game.mainCharacter.AttackPower;
+  var enemyLife = game.enemy.HealthPoints;
+  game.enemy.HealthPoints -= attack;
+
+  if(game.enemy.HealthPoints <= 0){
+   // clear the arena
+
+    $('#arena').html("");
+
+    //
+    $(function(){
+      $('#enemies-container .characters').on("click", function() {
+        alert($(this).attr("data-char"));
+        $("#enemies-container").html("");
+
+        var indexPlaceholder ;
+
+        for (var i = 0; i < game.enemies.length; i++){
+          if (game.enemies[i].name == $(this).attr("data-char")){
+            game.pickEnemy(game.enemies[i]);
+            var indexPlaceholder = i;
+
+            $("#arena").html("<div class='characters' data-char='"+ game.enemies[i].name +"'><img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px /></div>");
+          } else {
+
+            var charHolder = $("<div>");
+            charHolder.addClass("characters");
+            charHolder.attr("data-char", game.enemies[i].name);
+            charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
+            $("#enemies-container").append(charHolder);
+
+          }
+        }
+
+        //removes newest enemy chosen from enemies array
+        //needed to place this outside the loop
+        //also needed to declare a variable to hold the index before the
+        //array and then added a value to it in the loop
+        game.enemies.splice(indexPlaceholder, 1);
+      });
+    })
+
+  }
+  console.log(enemyLife);
+  game.mainCharacter.AttackPower += attack;
+
+  console.log(game.enemy.HealthPoints);
+});
 // game starts when character is chosen
 //
 // when character is picked it gets moved under character label
