@@ -81,6 +81,7 @@ $("#main-container .characters").on("click", function() {
     this.name = name;
     this.HealthPoints = 100;
     this.AttackPower  = attack;
+    this.totalAttackPower = 0;
     this.CounterAttackPower = counterAttack;
   }
 
@@ -108,13 +109,22 @@ $("#main-container .characters").on("click", function() {
 
 $("#attack").on("click", function () {
   var attack = game.mainCharacter.AttackPower;
-  var enemyLife = game.enemy.HealthPoints;
-  game.enemy.HealthPoints -= attack;
+  game.mainCharacter.totalAttackPower += attack;
 
-  if(game.enemy.HealthPoints <= 0){
+  var totalAttack = game.mainCharacter.totalAttackPower;
+  game.enemy.HealthPoints -= totalAttack;
+
+  console.log("this is current attack level " + attack);
+  console.log("this is current total attack point " + totalAttack);
+
+  var enemyLife = game.enemy.HealthPoints;
+  game.mainCharacter.HealthPoints -= totalAttack;
+
+
+  if(game.enemy.HealthPoints <= 0 && game.enemies.length > 0){
    // clear the arena
 
-    $('#arena').html("");
+    $('#arena').html("Please Choose Another Opponent");
 
     //
     $(function(){
@@ -149,11 +159,28 @@ $("#attack").on("click", function () {
       });
     })
 
-  }
-  console.log(enemyLife);
-  game.mainCharacter.AttackPower += attack;
+  } else if (game.enemies.length == 0){
+      alert("You WIN");
+      $("#arena").html("<button id='restart' class='btn btn-primary btn-lg'>Restart Game</button>");
+      $('#main-container').html("");
+      $("#restart").on("click", function(){
+        var kenobi = new Character("kenobi", 6 , 10 );
+        var luke = new Character("luke", 8 , 15);
+        var sidious = new Character("sidious",10 , 20);
+        var maul = new Character("maul",15 , 25);
 
+        var game = new Game(kenobi, luke, sidious, maul);
+
+        console.log(game);
+
+        game.load();
+      });
+  }
+
+
+  console.log(enemyLife);
   console.log(game.enemy.HealthPoints);
+
 });
 // game starts when character is chosen
 //
