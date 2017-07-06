@@ -53,8 +53,11 @@ function Game (char1, char2, char3, char4) {
 }
 
 $("#main-container .characters").on("click", function() {
-  alert("You have chosen " + $(this).attr("data-char"));
 
+  //Modal Popup showing which character was chosen
+  var character = $(this).attr("data-char");
+  $("#modalBody").html("You have Chosen " + character);
+  $('#modal').modal('show');
    //declaring a variable before loop to hold index of character to
    //remove and also placing the splice method outside of the loop
    //to not change the size of the array while looping
@@ -80,7 +83,12 @@ $("#main-container .characters").on("click", function() {
  $("#main-container").html("<div class='characters' data-char='"+ game.mainCharacter.name +"'><img src='assets/images/" + game.mainCharacter.name + ".jpg' width=150px height=150px /></div>");
 
  $('#enemies-container .characters').on("click", function() {
-   alert($(this).attr("data-char"));
+   //Modal Popup showing which character was chosen
+   var character = $(this).attr("data-char");
+   $("#modalBody").html("You have chosen to fight " + character);
+   $("#modal .modal-title").html("Chosen Enemy");
+   $('#modal').modal('show');
+
    $("#enemies-container").html("");
 
    var spliceHolder;
@@ -136,7 +144,12 @@ $("#attack").on("click", function () {
     //
     $(function(){
       $('#enemies-container .characters').on("click", function() {
-        alert($(this).attr("data-char"));
+
+        //Modal Popup showing which character was chosen
+        var character = $(this).attr("data-char");
+        $("#modalBody").html("You have chosen " + character + " for you next opponent");
+        $("#modal .modal-title").html("Next Enemy");
+        $('#modal').modal('show');
         $("#enemies-container").html("");
 
         var indexPlaceholder ;

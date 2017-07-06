@@ -109,3 +109,7 @@ header {
  .flash {
     animation-name: flash;
  }
+
+ #modal {
+   color: black;
+ }
