@@ -9,48 +9,6 @@ console.log(game);
 
 game.load();
 
-function Character (name, attack , counterAttack){
-  this.name = name;
-  this.HealthPoints = 100;
-  this.AttackPower  = attack;
-  this.totalAttackPower = 0;
-  this.CounterAttackPower = counterAttack;
-}
-
-function Game (char1, char2, char3, char4) {
- this.loadEnemies = function (){
-   for (var i = 0; i < game.enemies.length; i++){
-     var charHolder = $("<div>");
-     charHolder.addClass("characters");
-     charHolder.attr("data-char", game.enemies[i].name);
-     charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
-     $("#enemies-container").append(charHolder);
-   }
- };
- this.pickMainCharacter = function(){};
- this.clickMainContainer = function (){};
- this.load = function() {
-   // Loops thru characters array and creates a div with a class to give it its shape
-   // and a data attr thats the characters name as well as an image
-   for (var i = 0; i < this.characters.length; i++){
-     var charHolder = $("<div>");
-     charHolder.addClass("characters");
-     charHolder.attr("data-char", this.characters[i].name);
-     charHolder.append("<img src='assets/images/" + this.characters[i].name + ".jpg' width=150px height=150px />");
-     $("#main-container").append(charHolder);
-   }
-
- };
- this.pickMainCharacter = function (character){
-   this.mainCharacter = character;
- };
- this.characters = [char1, char2, char3, char4];
- this.enemies = [];
- this.pickEnemy = function (character){
-   this.enemy = character;
- };
-
-}
 
 $("#main-container .characters").on("click", function() {
 
@@ -63,6 +21,8 @@ $("#main-container .characters").on("click", function() {
    //to not change the size of the array while looping
   var spliceHolder;
 
+  // Puts chosen Character as the main character and puts the rest of the
+  // characters into the an enemies array
   for (var i = 0; i < game.characters.length; i++){
    if (game.characters[i].name == $(this).attr("data-char")){
      game.pickMainCharacter(game.characters[i]);
@@ -74,7 +34,7 @@ $("#main-container .characters").on("click", function() {
    }
 
   }
-
+  //Remove chosen character out of the characters array
   game.characters.splice(spliceHolder,1);
 
   game.loadEnemies();
@@ -97,8 +57,13 @@ $("#main-container .characters").on("click", function() {
      if (game.enemies[i].name == $(this).attr("data-char")){
        game.pickEnemy(game.enemies[i]);
 
-       $("#arena").html("<div class='characters' data-char='"+ game.enemies[i].name +"'><img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px /></div>");
-
+       var charHolder = $("<div>");
+       charHolder.addClass("characters");
+       charHolder.attr("data-char", game.enemies[i].name);
+       charHolder.attr("data-ap", game.enemies[i].AttackPower);
+       charHolder.append("<div class='ap'><h4>Attack: "+ game.enemies[i].AttackPower +"</h4></div>");
+       charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
+       $("#arena").html(charHolder);
        spliceHolder = i;
 
      } else {
@@ -106,6 +71,8 @@ $("#main-container .characters").on("click", function() {
        var charHolder = $("<div>");
        charHolder.addClass("characters");
        charHolder.attr("data-char", game.enemies[i].name);
+       charHolder.attr("data-ap", game.enemies[i].AttackPower);
+       charHolder.append("<div class='ap'><h4>Attack: "+ game.enemies[i].AttackPower +"</h4></div>");
        charHolder.append("<img src='assets/images/" + game.enemies[i].name + ".jpg' width=150px height=150px />");
        $("#enemies-container").append(charHolder);
 
@@ -190,3 +157,57 @@ $("#attack").on("click", function () {
   console.log(game.enemy.HealthPoints);
 
 });
+
+//*******************************************************************
+//*********************  FUNCTION    ********************************
+//*******************************************************************
+
+
+function Character (name, attack , counterAttack){
+  this.name = name;
+  this.HealthPoints = 100;
+  this.AttackPower  = attack;
+  this.totalAttackPower = 0;
+  this.CounterAttackPower = counterAttack;
+}
+
+function Game (char1, char2, char3, char4) {
+ this.loadEnemies = function (){
+   for (var i = 0; i < this.enemies.length; i++){
+     var charHolder = $("<div>");
+     charHolder.addClass("characters");
+     charHolder.attr("data-char", this.enemies[i].name);
+     charHolder.attr("data-ap", this.characters[i].AttackPower);
+     charHolder.append("<div class='ap'><h4>Attack: "+ this.characters[i].AttackPower +"</h4></div>");
+     charHolder.append("<img src='assets/images/" + this.enemies[i].name + ".jpg' width=150px height=150px />");
+     $("#enemies-container").append(charHolder);
+   }
+ };
+ this.pickMainCharacter = function(){};
+ this.clickMainContainer = function (){};
+ this.load = function() {
+   // Loops thru characters array and creates a div with a class to give it its shape
+   // and a data attr thats the characters name as well as an image
+   for (var i = 0; i < this.characters.length; i++){
+
+     var charHolder = $("<div>");
+     charHolder.addClass("characters");
+     charHolder.attr("data-char", this.characters[i].name);
+     charHolder.attr("data-ap", this.characters[i].AttackPower);
+     charHolder.append("<img src='assets/images/" + this.characters[i].name + ".jpg' width=150px height=150px />");
+     charHolder.append("<div class='ap'><h4>Attack: "+ this.characters[i].AttackPower +"</h4></div>");
+     $("#main-container").append(charHolder);
+   }
+
+ };
+ this.pickMainCharacter = function (character){
+   this.mainCharacter = character;
+ };
+ this.characters = [char1, char2, char3, char4];
+ this.enemies = [];
+ this.pickEnemy = function (character){
+   this.enemy = character;
+ };
+
+
+}
