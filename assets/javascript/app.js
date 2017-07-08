@@ -1,24 +1,28 @@
+// Creating all the characters
 var kenobi = new Character("kenobi", 8, 120);
 var luke = new Character("luke",5, 100);
 var sidious = new Character("sidious",20, 150);
 var maul = new Character("maul",25, 180);
 
+//Load game with the characters
 var game = new Game(kenobi, luke, sidious, maul);
 
-console.log(game);
-
+// Loads Characters to Be Chosen at the TOP
 game.load();
 
-
+//******************************************************************************
+//*******************   Picking Main Charcter  *********************************
+//******************************************************************************
 $("#main-container .characters").on("click", function() {
   game.characterChosen = true;
   //Modal Popup showing which character was chosen
   var character = $(this).attr("data-char");
   $("#modalBody").html("You have Chosen " + character);
   $('#modal').modal('show');
-   //declaring a variable before loop to hold index of character to
-   //remove and also placing the splice method outside of the loop
-   //to not change the size of the array while looping
+
+ //declaring a variable before loop to hold the index of the character to
+ //be removed and also placing the splice method outside of the loop as
+ //to not change the size of the array while looping
   var spliceHolder;
 
   // Puts chosen Character as the main character and puts the rest of the
@@ -26,7 +30,7 @@ $("#main-container .characters").on("click", function() {
   for (var i = 0; i < game.characters.length; i++){
    if (game.characters[i].name == $(this).attr("data-char")){
      game.pickMainCharacter(game.characters[i]);
-     //remove main character from the array
+     //used to remove chosen character after the loop
      spliceHolder = i;
      console.log(game.characters);
    } else {
@@ -36,11 +40,17 @@ $("#main-container .characters").on("click", function() {
   }
   //Remove chosen character out of the characters array
   game.characters.splice(spliceHolder,1);
-
+  //Loads enemies to the DOM
   game.loadEnemies();
 
- //updates only main character to be reloaded
+ //Loads only the main character at the top
  game.loadMainCharacter();
+
+
+ //******************************************************************************
+ //*******************   Picking Enemy          *********************************
+ //******************************************************************************
+
 
  $('#enemies-container .characters').on("click", function() {
 
@@ -53,12 +63,20 @@ $("#main-container .characters").on("click", function() {
 
    $("#enemies-container").html("");
 
+   //declaring a variable before loop to hold the index of the enemy to
+   //be removed and also placing the splice method outside of the loop as
+   //to not change the size of the array while looping
    var spliceHolder;
 
+   // Puts chosen Enemy as the main character and puts the rest of the
+   // characters into the an enemies array
    for (var i = 0; i < game.enemies.length; i++){
      if (game.enemies[i].name == $(this).attr("data-char")){
+       //Sets current enemy as the main enemy to fight
        game.pickEnemy(game.enemies[i]);
+       //Loads enemy to the arena
        game.loadEnemy();
+       //used to remove chosen character after the loop
        spliceHolder = i;
 
      } else {
@@ -72,7 +90,7 @@ $("#main-container .characters").on("click", function() {
        $("#enemies-container").append(charHolder);
 
      }
-   }
+   } //End of For Loop
 
    //remove from the enemies array
    game.enemies.splice(spliceHolder, 1);
@@ -87,32 +105,35 @@ $("#main-container .characters").on("click", function() {
 
 $("#attack").on("click", function () {
 
+  // First checks if a character and an enemy have both been chosen
   if(game.characterChosen && game.enemyChosen){
     // Shows Flashing of enemy box
     $('#arena').toggleClass('animated flash');
     // Removes flashing class as to be able re add it when clicked again
     setTimeout(function(){ $('#arena').removeClass('animated flash'); },500);
 
+    //Grabs initial attack power
     var attack = game.mainCharacter.AttackPower;
+    //Adds initial attack power to the final attack power
     game.mainCharacter.totalAttackPower += attack;
 
+    // Subtracts Attack from Enemies Health
     var totalAttack = game.mainCharacter.totalAttackPower;
     game.enemy.HealthPoints -= totalAttack;
 
+    //Loads the enemy with updated stats
     game.loadEnemy();
+    //Loads Description of Attack
     game.loadFightStats();
 
-
-    console.log("this is current attack level " + attack);
-    console.log("this is current total attack point " + totalAttack);
-
-    var enemyLife = game.enemy.HealthPoints;
+    // Subtracts attack points of main character from enemies attack
     game.mainCharacter.HealthPoints -= game.enemy.AttackPower;
 
+    // Reloads main character which will have not stats
     game.loadMainCharacter();
 
+    // If Statements to test several conditions for final outcome after each attack
     if(game.enemy.HealthPoints <= 0 && game.enemies.length > 0 && game.mainCharacter.HealthPoints > 0){
-     // clear the arena
 
       $('#arena').html("<div class='text-center'><h2>Please Choose Another Opponent</h2></div>");
 
@@ -164,8 +185,6 @@ $("#attack").on("click", function () {
       $("#arena").html("<button onclick='location.reload()' class='btn btn-primary btn-lg'>Restart Game</button>");
       $('#main-container').html("");
     }
-
-    console.log(enemyLife);
     console.log(game.enemy.HealthPoints);
   } else {
     alert("Please Choose A Player first ");
@@ -173,11 +192,11 @@ $("#attack").on("click", function () {
 
 });
 
-//*******************************************************************
-//*********************  FUNCTION    ********************************
-//*******************************************************************
+//******************************************************************************
+//*********************  FUNCTION    *******************************************
+//******************************************************************************
 
-
+//Used for Creating a Charcter
 function Character (name, attack , health){
   this.name = name;
   this.HealthPoints = health;
@@ -185,6 +204,7 @@ function Character (name, attack , health){
   this.totalAttackPower = 0;
 }
 
+//Used to create the game
 function Game (char1, char2, char3, char4) {
  this.loadEnemies = function (){
    for (var i = 0; i < this.enemies.length; i++){
@@ -249,5 +269,4 @@ function Game (char1, char2, char3, char4) {
  };
  this.characterChosen = false;
  this.enemyChosen = false;
-
 }
