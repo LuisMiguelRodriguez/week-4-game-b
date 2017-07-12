@@ -181,7 +181,7 @@ $("#attack").on("click", function () {
       $("#arena").html("<button onclick='location.reload()' class='btn btn-primary btn-lg'>Restart Game</button>");
       $('#main-container').html("");
     } else if (game.mainCharacter.HealthPoints <= 0){
-      alert("You Loose");
+      alert("You Lose");
       $("#arena").html("<button onclick='location.reload()' class='btn btn-primary btn-lg'>Restart Game</button>");
       $('#main-container').html("");
     }
@@ -269,4 +269,5 @@ function Game (char1, char2, char3, char4) {
  };
  this.characterChosen = false;
  this.enemyChosen = false;
+
 }
